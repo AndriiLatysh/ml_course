@@ -19,7 +19,7 @@ X = standard_scaler.fit_transform(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True)
 
-mlp = MLPClassifier(hidden_layer_sizes=(10, ), max_iter=5000)
+mlp = MLPClassifier(hidden_layer_sizes=(5, ), max_iter=5000)
 mlp.fit(X_train, y_train)
 
 y_predictions = mlp.predict(X_test)
