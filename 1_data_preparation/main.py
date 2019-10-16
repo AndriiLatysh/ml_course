@@ -68,6 +68,8 @@ for z in range(len(conversion_df)):
     if conversion_df.at[z, "seen count"] > 1e9:
         conversion_df.at[z, "seen count"] = 0
 
+# conversion_df.loc[conversion_df["seen count"] > 1e9, "seen count"] = 0
+
 conversion_df.insert(conversion_df.columns.get_loc("last name"), "full name", None)
 for z in range(len(conversion_df)):
     conversion_df.at[z, "full name"] = (
@@ -109,16 +111,23 @@ conversion_df.insert(conversion_df.columns.get_loc("gender"), "age bucket", None
 for z in range(len(conversion_df)):
     conversion_df.at[z, "age bucket"] = convert_age_to_range(conversion_df.at[z, "age"])
 
-# conversion_df.drop(columns=["age"], inplace=True)
+conversion_df.drop(columns=["age"], inplace=True)
+
 conversion_df = conversion_df.astype(
-    {"age": int, "seen count": float, "followed ad": int, "made purchase": int, "user rating": int})
+    {"seen count": int, "followed ad": int, "made purchase": int, "user rating": int})
+
 colors_groped = (conversion_df[["color scheme", "followed ad", "made purchase"]]).groupby("color scheme").mean()
+
+followed_grouped = (conversion_df[["seen count", "followed ad"]]).groupby("followed ad").mean()
+
 # print(conversion_df.dtypes)
 
-conversion_df["seen count"] = normalize_column(conversion_df["seen count"])
+# conversion_df["seen count"] = normalize_column(conversion_df["seen count"])
 
 print(conversion_df)
 
 print(colors_groped)
+
+print(followed_grouped)
 
 conversion_df.to_csv("prepared_dataset_1.csv")
