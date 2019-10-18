@@ -1,6 +1,8 @@
 import pandas as pd
+import numpy as np
 import colour
 import copy
+from sklearn import preprocessing
 
 
 def set_printing_options():
@@ -38,7 +40,7 @@ def convert_age_to_range(age):
     elif 35 <= age < 99:
         return "35-99"
     else:
-        return None
+        return "unknown"
 
 
 def normalize_column(column):
@@ -114,7 +116,17 @@ for z in range(len(conversion_df)):
 conversion_df.drop(columns=["age"], inplace=True)
 
 conversion_df = conversion_df.astype(
-    {"seen count": int, "followed ad": int, "made purchase": int, "user rating": int})
+    {"seen count": float, "followed ad": int, "made purchase": int, "user rating": int})
+
+conversion_df.insert(conversion_df.columns.get_loc("user rating"), "ad effectiveness", None)
+
+for z in range(len(conversion_df)):
+    if conversion_df.at[z, "seen count"] == 0:
+        conversion_df.at[z, "ad effectiveness"] = -1
+    else:
+        conversion_df.at[z, "ad effectiveness"] = (conversion_df.at[z, "followed ad"] +
+                                                   conversion_df.at[z, "made purchase"]) / \
+                                                  (2 * conversion_df.at[z, "seen count"])
 
 colors_groped = (conversion_df[["color scheme", "followed ad", "made purchase"]]).groupby("color scheme").mean()
 
@@ -123,6 +135,11 @@ followed_grouped = (conversion_df[["seen count", "followed ad"]]).groupby("follo
 # print(conversion_df.dtypes)
 
 # conversion_df["seen count"] = normalize_column(conversion_df["seen count"])
+
+seen_count_scaler = preprocessing.MinMaxScaler()
+
+conversion_df[["seen count"]] = seen_count_scaler.fit_transform(
+    conversion_df[["seen count"]])
 
 print(conversion_df)
 
