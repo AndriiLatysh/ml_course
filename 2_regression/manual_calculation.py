@@ -1,6 +1,7 @@
 import pandas as pd
 
-subscribers_from_ads = pd.read_csv("subscribers_from_ads.csv")
+
+subscribers_from_ads = pd.read_csv("data/subscribers_from_ads.csv")
 x = subscribers_from_ads["promotion_budget"].to_list()
 y = subscribers_from_ads["subscribers"].to_list()
 k = (len(x) * sum([a * b for a, b in zip(x, y)]) - sum(x) * sum(y)) / (len(x) * sum([a ** 2 for a in x]) - sum(x) ** 2)

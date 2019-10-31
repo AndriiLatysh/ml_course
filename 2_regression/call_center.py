@@ -2,52 +2,50 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn.linear_model as lm
-from mlinsights.mlmodel import QuantileLinearRegression
-
-
-def train_linear_model(X, y):
-    trained_model = lm.LinearRegression()
-    trained_model.fit(X, y)
-    return trained_model
+import mlinsights.mlmodel as mi_models
 
 
 plt.figure(figsize=(20, 8))
 
-call_center_data = pd.read_csv("data/call_center.csv", parse_dates=["timestamp"])
-print(call_center_data)
-# print(call_center_data.dtypes)
+call_center_df = pd.read_csv("data/call_center.csv", parse_dates=["timestamp"])
 
-# call_center_data.at[17, "calls"] = 500
-# call_center_data.at[18, "calls"] = 500
-# call_center_data.at[19, "calls"] = 500
+# call_center_df.at[17, "calls"] = 500
+# call_center_df.at[18, "calls"] = 500
+# call_center_df.at[19, "calls"] = 500
 
-# X = np.array([t.value for t in call_center_data["timestamp"]]).reshape(-1, 1)
-X = np.array(call_center_data.index).reshape(-1, 1)
-y = np.array(call_center_data["calls"]).reshape(-1, 1)
+# X = np.array([t.value for t in call_center_df["timestamp"]]).reshape(-1, 1)
+X = np.array(call_center_df.index).reshape(-1, 1)
+y = np.array(call_center_df["calls"]).reshape(-1, 1)
 
-ols_model = train_linear_model(X, y)
+plt.plot(X, y, color="b")
 
-ols_trend = ols_model.predict(X)
+border_values = np.array([X[0][0], X[-1][0]]).reshape(-1, 1)
+print(border_values)
 
-print(ols_model.coef_)
-print(ols_trend[-1] - ols_trend[0])
+print("OLX:")
 
-# X_lad = np.array([t.value for t in call_center_data["timestamp"]]).reshape(-1, 1)
-X_lad = np.array(call_center_data.index).reshape(-1, 1)
-y_lad = np.array(call_center_data["calls"])
+ols_model = lm.LinearRegression()
+ols_model.fit(X, y)
 
-lad_model = QuantileLinearRegression()
+ols_trend = ols_model.predict(border_values)
 
-lad_model.fit(X_lad, y_lad)
+plt.plot(border_values, ols_trend, color="r")
 
-lad_trend = lad_model.predict(X_lad)
+print("Slope: {}".format(ols_model.coef_[0][0]))
+print("Overall change: {}".format(ols_trend[1][0] - ols_trend[0][0]))
 
-print(lad_model.coef_)
-print(lad_trend[-1] - lad_trend[0])
+print("LAD:")
 
-plt.plot(X, y)
+y = np.array(call_center_df["calls"])
 
-plt.plot(X, ols_trend, color="r")
-plt.plot(X_lad, lad_trend, color="g")
+lad_model = mi_models.QuantileLinearRegression()
+lad_model.fit(X, y)
+
+lad_trend = lad_model.predict(border_values)
+
+plt.plot(border_values, lad_trend, color="g")
+
+print("Slope: {}".format(lad_model.coef_[0]))
+print("Overall change: {}".format(lad_trend[1] - lad_trend[0]))
 
 plt.show()
