@@ -1,40 +1,42 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
+import sklearn.linear_model as lm
+import sklearn.metrics as sm
 
-qualifies_by_single_grade = pd.read_csv("data/single_grade.csv")
-qualifies_by_single_grade.sort_values(by="grade", inplace=True)
-print(qualifies_by_single_grade)
 
-qualified_candidates = qualifies_by_single_grade[qualifies_by_single_grade["qualifies"] == 1]
-unqualified_candidates = qualifies_by_single_grade[qualifies_by_single_grade["qualifies"] == 0]
+qualifies_single_grade_df = pd.read_csv("data/single_grade.csv")
+qualifies_single_grade_df.sort_values(by="grade", inplace=True)
+# print(qualifies_single_grade_df)
+
+qualified_candidates = qualifies_single_grade_df[qualifies_single_grade_df["qualifies"] == 1]
+unqualified_candidates = qualifies_single_grade_df[qualifies_single_grade_df["qualifies"] == 0]
 
 plt.scatter(qualified_candidates["grade"], qualified_candidates["qualifies"], color="g")
 plt.scatter(unqualified_candidates["grade"], unqualified_candidates["qualifies"], color="r")
 
-X = np.array(qualifies_by_single_grade["grade"]).reshape(-1, 1)
-y = np.array(qualifies_by_single_grade["qualifies"])
+X = qualifies_single_grade_df[["grade"]]
+y = qualifies_single_grade_df["qualifies"]
 
-# logistic_model = LogisticRegression()
-logistic_model = LogisticRegression(solver="lbfgs")
-logistic_model.fit(X, y)
-modeled_values = logistic_model.predict(X)
+# cv_qualification_model = lm.LogisticRegression()
+qualification_model = lm.LogisticRegression(solver="lbfgs")
+qualification_model.fit(X, y)
 
-prediction_probabilities = logistic_model.predict_proba(X)[:, 1]
+modeled_qualification = qualification_model.predict(X)
+modeled_qualification_probability = qualification_model.predict_proba(X)[:, 1]
 
-qualifies_by_single_grade["probability"] = prediction_probabilities
-print(qualifies_by_single_grade)
+qualifies_single_grade_df["modeled probability"] = modeled_qualification_probability
 
-confusion_matrix = metrics.confusion_matrix(y, modeled_values)
+print(qualifies_single_grade_df)
+
+plt.plot(X, modeled_qualification, color="b")
+plt.plot(X, modeled_qualification_probability, color="c")
+
+confusion_matrix = sm.confusion_matrix(y, modeled_qualification)
 print(confusion_matrix)
 
-print("Accuracy:", metrics.accuracy_score(y, modeled_values))
-print("Error Rate:", 1 - metrics.accuracy_score(y, modeled_values))
-print("Precision:", metrics.precision_score(y, modeled_values))
-print("Recall:", metrics.recall_score(y, modeled_values))
+print("Accuracy: {}".format(sm.accuracy_score(y, modeled_qualification)))
+print("Error rate: {}".format(1 - sm.accuracy_score(y, modeled_qualification)))
+print("Precision: {}".format(sm.precision_score(y, modeled_qualification)))
+print("Recall: {}".format(sm.recall_score(y, modeled_qualification)))
 
-plt.plot(X, modeled_values)
-plt.plot(X, prediction_probabilities, color="b")
 plt.show()

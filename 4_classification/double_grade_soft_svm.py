@@ -41,7 +41,7 @@ X = np.array(qualifies_by_double_grade[["technical_grade", "english_grade"]]).re
 y = np.array(qualifies_by_double_grade["qualifies"])
 
 # k_folds = ms.KFold(n_splits=4, shuffle=False)
-# confusion_matrix = np.array([[0, 0], [0, 0]])
+# cv_confusion_matrix = np.array([[0, 0], [0, 0]])
 #
 # model_kernel = "linear"
 # model_C = 1
@@ -54,13 +54,13 @@ y = np.array(qualifies_by_double_grade["qualifies"])
 #     svm_classifier.fit(X_train, y_train)
 #     y_modeled = svm_classifier.predict(X_test)
 #
-#     test_confusion_matrix = metrics.confusion_matrix(y_test, y_modeled)
+#     test_confusion_matrix = metrics.cv_confusion_matrix(y_test, y_modeled)
 #     print(test_confusion_matrix)
 #
-#     confusion_matrix += test_confusion_matrix
+#     cv_confusion_matrix += test_confusion_matrix
 #
 # print("Confusion matrix:")
-# print(confusion_matrix)
+# print(cv_confusion_matrix)
 #
 # svm_classifier = svm.SVC(C=model_C, kernel=model_kernel)
 # svm_classifier.fit(X, y)

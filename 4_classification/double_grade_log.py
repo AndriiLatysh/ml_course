@@ -1,57 +1,67 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sklearn.linear_model as lm
 import sklearn.model_selection as ms
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-from joblib import dump, load
+import sklearn.metrics as sm
+import joblib
 
 
-qualifies_by_double_grade = pd.read_csv("data/double_grade.csv")
-print(qualifies_by_double_grade)
+def plot_model(model):
+    plt.xlabel("Technical grade")
+    plt.ylabel("English grade")
 
-qualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 1]
-unqualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 0]
+    qualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 1]
+    unqualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 0]
 
-plt.xlabel("technical_grade")
-plt.ylabel("english_grade")
-plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="g")
-plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="r")
+    max_grade = 101
+    english_grades_range = list(range(max_grade))
+    technical_grades_range = list(range(max_grade))
+    probability_level = np.empty([max_grade, max_grade])
+    for x in technical_grades_range:
+        for y in english_grades_range:
+            prediction_point = (np.array([x, y]).reshape(1, -1))
+            probability_level[x, y] = model.predict_proba(prediction_point)[:, 1]
 
-X = np.array(qualifies_by_double_grade[["technical_grade", "english_grade"]]).reshape(-1, 2)
-y = np.array(qualifies_by_double_grade["qualifies"])
+    plt.contourf(probability_level, cmap="rainbow")  # cmap="RdYlBu"/"binary"
 
-# X_train, X_test, y_train, y_test = ms.train_test_split(X, y)
-#
-# logistic_model = LogisticRegression(solver="lbfgs")
-# logistic_model.fit(X_train, y_train)
-# y_modeled = logistic_model.predict(X_test)
-#
-# logistic_confusion_matrix = metrics.logistic_confusion_matrix(y_test, y_modeled)
-# print(logistic_confusion_matrix)
+    plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="w")
+    plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="k")
 
-k_folds = ms.KFold(n_splits=4, shuffle=False)
-confusion_matrix = np.array([[0, 0], [0, 0]])
 
-for train_index, test_index in k_folds.split(X):
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = y[train_index], y[test_index]
+qualifies_double_grade_df = pd.read_csv("data/double_grade.csv")
 
-    logistic_model = LogisticRegression(solver="lbfgs")
-    logistic_model.fit(X_train, y_train)
-    y_modeled = logistic_model.predict(X_test)
+X = qualifies_double_grade_df[["technical_grade", "english_grade"]]
+y = qualifies_double_grade_df["qualifies"]
 
-    test_confusion_matrix = metrics.confusion_matrix(y_test, y_modeled)
-    print(test_confusion_matrix)
+number_of_folds = 4
 
-    confusion_matrix += test_confusion_matrix
+cv_qualification_model = lm.LogisticRegression(solver="lbfgs")
+cv_model_quality = ms.cross_val_score(cv_qualification_model, X, y, cv=number_of_folds, scoring="accuracy")
+print(cv_model_quality)
 
-print("Confusion matrix:")
-print(confusion_matrix)
+prediction_model_quality = ms.cross_val_predict(cv_qualification_model, X, y, cv=number_of_folds)
+cv_confusion_matrix = sm.confusion_matrix(y, prediction_model_quality)
+print(cv_confusion_matrix)
 
-final_model = LogisticRegression(solver="lbfgs")
-final_model.fit(X, y)
+qualification_model = lm.LogisticRegression(solver="lbfgs")
+qualification_model.fit(X, y)
 
-dump(final_model, "models/qualification_by_double_grade_model.joblib")
+modeled_qualification_probabilities = qualification_model.predict_proba(X)[:, 1]
+qualifies_double_grade_df["modeled probability"] = modeled_qualification_probabilities
 
-# plt.show()
+pd.set_option("display.max_rows", None)
+print(qualifies_double_grade_df.sort_values(by="modeled probability"))
+
+print(qualification_model.coef_)
+print(qualification_model.intercept_)
+
+plot_model(qualification_model)
+
+joblib.dump(qualification_model, "models/qualification_by_two_grades_model.joblib")
+
+# predicted_qualification = qualification_model.predict(X)
+# confusion_matrix = sm.confusion_matrix(y, predicted_qualification)
+# print(confusion_matrix)
+
+plt.show()
