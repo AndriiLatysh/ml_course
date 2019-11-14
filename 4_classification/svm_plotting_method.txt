@@ -4,7 +4,7 @@ def plot_model(svm_classifier):
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
     # create grid to evaluate model
-    plotting_step = 50
+    plotting_step = 100
     xx = np.linspace(xlim[0], xlim[1], plotting_step)
     yy = np.linspace(ylim[0], ylim[1], plotting_step)
     YY, XX = np.meshgrid(yy, xx)
