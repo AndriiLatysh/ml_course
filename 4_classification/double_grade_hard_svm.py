@@ -1,7 +1,18 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn import svm
+import sklearn.svm as svm
+
+
+def plot_values(qualifies_double_grade_df):
+    plt.xlabel("Technical grade")
+    plt.ylabel("English grade")
+
+    qualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 1]
+    unqualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 0]
+
+    plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="g")
+    plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="r")
 
 
 def plot_model(svm_classifier):
@@ -10,7 +21,7 @@ def plot_model(svm_classifier):
     xlim = ax.get_xlim()
     ylim = ax.get_ylim()
     # create grid to evaluate model
-    plotting_step = 30
+    plotting_step = 100
     xx = np.linspace(xlim[0], xlim[1], plotting_step)
     yy = np.linspace(ylim[0], ylim[1], plotting_step)
     YY, XX = np.meshgrid(yy, xx)
@@ -24,23 +35,16 @@ def plot_model(svm_classifier):
                linewidth=1, facecolors='none')
 
 
-qualifies_by_double_grade = pd.read_csv("data/double_grade_small.csv")
-print(qualifies_by_double_grade)
+qualifies_double_grade_df = pd.read_csv("data/double_grade_small.csv")
 
-qualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 1]
-unqualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 0]
+plot_values(qualifies_double_grade_df)
 
-plt.xlabel("technical_grade")
-plt.ylabel("english_grade")
-plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="g")
-plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="r")
+X = qualifies_double_grade_df[["technical_grade", "english_grade"]]
+y = qualifies_double_grade_df["qualifies"]
 
-X = np.array(qualifies_by_double_grade[["technical_grade", "english_grade"]]).reshape(-1, 2)
-y = np.array(qualifies_by_double_grade["qualifies"])
+smv_hard_linear_classifier = svm.SVC(kernel="linear")
+smv_hard_linear_classifier.fit(X, y)
 
-svm_classifier = svm.SVC(kernel="linear")
-svm_classifier.fit(X, y)
-
-plot_model(svm_classifier)
+plot_model(smv_hard_linear_classifier)
 
 plt.show()

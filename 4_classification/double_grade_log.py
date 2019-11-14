@@ -7,7 +7,7 @@ import sklearn.metrics as sm
 import joblib
 
 
-def plot_model(model):
+def plot_model(model, qualifies_double_grade_df):
     plt.xlabel("Technical grade")
     plt.ylabel("English grade")
 
@@ -15,13 +15,11 @@ def plot_model(model):
     unqualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 0]
 
     max_grade = 101
-    english_grades_range = list(range(max_grade))
-    technical_grades_range = list(range(max_grade))
     probability_level = np.empty([max_grade, max_grade])
-    for x in technical_grades_range:
-        for y in english_grades_range:
-            prediction_point = (np.array([x, y]).reshape(1, -1))
-            probability_level[x, y] = model.predict_proba(prediction_point)[:, 1]
+    for technical_grade in range(max_grade):
+        for english_grade in range(max_grade):
+            prediction_point = [[technical_grade, english_grade]]
+            probability_level[technical_grade, english_grade] = model.predict_proba(prediction_point)[:, 1]
 
     plt.contourf(probability_level, cmap="rainbow")  # cmap="RdYlBu"/"binary"
 
@@ -56,12 +54,23 @@ print(qualifies_double_grade_df.sort_values(by="modeled probability"))
 print(qualification_model.coef_)
 print(qualification_model.intercept_)
 
-plot_model(qualification_model)
+plot_model(qualification_model, qualifies_double_grade_df)
 
 joblib.dump(qualification_model, "models/qualification_by_two_grades_model.joblib")
 
 # predicted_qualification = qualification_model.predict(X)
 # confusion_matrix = sm.confusion_matrix(y, predicted_qualification)
 # print(confusion_matrix)
+
+plt.clf()
+
+plt.xlabel("False positive rate")
+plt.ylabel("True positive rate")
+
+false_positive_rate, true_positive_rate, thresholds = sm.roc_curve(y, modeled_qualification_probabilities)
+plt.plot(false_positive_rate, true_positive_rate)
+
+roc_auc = sm.roc_auc_score(y, modeled_qualification_probabilities)
+print("Area under curve: {}".format(roc_auc))
 
 plt.show()
