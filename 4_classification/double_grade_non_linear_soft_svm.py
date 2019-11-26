@@ -71,9 +71,4 @@ print(confusion_matrix)
 
 plot_model(grid_search.best_estimator_)
 
-# smv_soft_rbf_classifier = svm.SVC(kernel="rbf", gamma="scale")
-# smv_soft_rbf_classifier.fit(X, y)
-#
-# plot_model(smv_soft_rbf_classifier)
-
 plt.show()
