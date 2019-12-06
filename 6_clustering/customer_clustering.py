@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.cluster import AgglomerativeClustering
-import scipy.cluster.hierarchy as shc
+import sklearn.preprocessing as sk_preprocessing
+import sklearn.cluster as sk_clustering
+import scipy.cluster.hierarchy as sp_clustering_hr
 
 
 def set_printing_options():
@@ -20,15 +20,17 @@ users["average_price"] = users["total_spent"] / users["items_purchased"]
 print(users[["average_price", "return_rate", "overall_rating"]])
 
 X = np.array(users[["average_price", "return_rate", "overall_rating"]]).reshape(-1, 3)
-min_max_scaler = MinMaxScaler()
+min_max_scaler = sk_preprocessing.MinMaxScaler()
 X = min_max_scaler.fit_transform(X)
 
 print(X)
 
 plt.title("Customer dendogram")
-dend = shc.dendrogram(shc.linkage(X, method="ward"))  # single complete average ward
 
-agglomerative_model = AgglomerativeClustering(n_clusters=4, linkage="ward")
+linkage_method = "ward"
+dendogram = sp_clustering_hr.dendrogram(sp_clustering_hr.linkage(X, method=linkage_method))  # single complete average ward
+
+agglomerative_model = sk_clustering.AgglomerativeClustering(n_clusters=4, linkage=linkage_method)
 
 agglomerative_model.fit(X)
 
