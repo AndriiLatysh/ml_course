@@ -34,7 +34,7 @@ X = standard_scaler.fit_transform(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True)
 
-ann_model = MLPClassifier(hidden_layer_sizes=(6,), max_iter=1000000)
+ann_model = MLPClassifier(hidden_layer_sizes=(6, 6), max_iter=1000000)
 ann_model.fit(X_train, y_train)
 
 y_predicted = ann_model.predict(X_test)
