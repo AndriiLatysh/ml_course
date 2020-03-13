@@ -15,7 +15,7 @@ class Point:
         self.x_coordinate += x_shift
         self.y_coordinate += y_shift
 
-    def __str__(self):
+    def __repr__(self):
         point_str = "({}, {})".format(self.x_coordinate, self.y_coordinate)
         return point_str
 
@@ -29,8 +29,8 @@ class ColoredPoint(Point):
     def recolor(self, color):
         self.__color = color
 
-    def __str__(self):
-        colored_point_str = super().__str__() + " {}".format(self.__color)
+    def __repr__(self):
+        colored_point_str = super().__repr__() + f" {self.__color}"
         return colored_point_str
 
 

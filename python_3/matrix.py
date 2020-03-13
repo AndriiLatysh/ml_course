@@ -9,3 +9,8 @@ for x in range(row_count):
     for y in range(column_count):
         print(values[x][y], end=" ")
     print()
+
+for y in range(column_count):
+    for x in range(row_count):
+        print(values[x][y], end=" ")
+    print()
