@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
-import colour
-import copy
 from sklearn import preprocessing
 
 
 def set_printing_options():
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', 200)
+    pd.set_option("display.max_columns", None)
+    pd.set_option("display.width", 200)
+    pd.set_option("display.float_format", "{:.4g}".format)
 
 
 def reorder_columns(df):
@@ -22,14 +21,16 @@ def convert_text_to_binary(text):
         return 1
     elif text == "n":
         return 0
+    else:
+        return None
 
 
 def convert_rating_to_grade(rating):
-    rating_mapping = {"excellent": 5, "good": 4, "ok": 3, "bad": 2}
+    rating_mapping = {"excellent": 5, "good": 4, "ok": 3, "bad": 2, np.NaN: 1}
     if rating in rating_mapping:
         return rating_mapping[rating]
     else:
-        return 1
+        return None
 
 
 def convert_age_to_range(age):
@@ -55,7 +56,7 @@ def normalize_column(column):
 
 set_printing_options()
 
-conversion_df = pd.read_csv("DataSet_1.csv")
+conversion_df = pd.read_csv("data/ad_conversion.csv")
 
 print(conversion_df)
 
@@ -72,7 +73,9 @@ for z in range(len(conversion_df)):
 
 # conversion_df.loc[conversion_df["seen count"] > 1e9, "seen count"] = 0
 
-conversion_df.insert(conversion_df.columns.get_loc("last name"), "full name", None)
+# conversion_df["seen count"].mask(conversion_df["seen count"] > 1e9, 0, inplace=True)
+
+conversion_df.insert(conversion_df.columns.get_loc("gender"), "full name", None)
 for z in range(len(conversion_df)):
     conversion_df.at[z, "full name"] = (
             conversion_df.at[z, "first name"] + " " + conversion_df.at[z, "last name"]).strip()
@@ -81,12 +84,6 @@ for z in range(len(conversion_df)):
 
 conversion_df.drop(columns=["first name", "last name"], inplace=True)
 
-for z in range(len(conversion_df)):
-    conversion_df.at[z, "followed ad"] = convert_text_to_binary(conversion_df.at[z, "followed ad"])
-    conversion_df.at[z, "made purchase"] = convert_text_to_binary(conversion_df.at[z, "made purchase"])
-    conversion_df.at[z, "user rating"] = convert_rating_to_grade(conversion_df.at[z, "user rating"])
-    # conversion_df.at[z, "color scheme"] = colour.Color(conversion_df.at[z, "color scheme"])
-
 # conversion_df["birthday"] = (
 #         conversion_df["year of birth"].map(str) + "-" + conversion_df["month of birth"].map(str) + "-" + conversion_df["day of birth"].map(str)).map(
 #     pd.Timestamp)
@@ -94,7 +91,7 @@ for z in range(len(conversion_df)):
 #                      (conversion_df["year of birth"].map(str) + "-" + conversion_df["month of birth"].map(str) + "-" +
 #                       conversion_df["day of birth"].map(str)).map(pd.Timestamp))
 
-conversion_df.insert(conversion_df.columns.get_loc("gender"), "birthday", None)
+conversion_df.insert(conversion_df.columns.get_loc("color scheme"), "birthday", None)
 for z in range(len(conversion_df)):
     conversion_df.at[z, "birthday"] = pd.Timestamp(day=conversion_df.at[z, "day of birth"],
                                                    month=conversion_df.at[z, "month of birth"],
@@ -102,21 +99,32 @@ for z in range(len(conversion_df)):
 
 conversion_df.drop(columns=["day of birth", "month of birth", "year of birth"], inplace=True)
 
-conversion_df.insert(conversion_df.columns.get_loc("birthday"), "age", None)
+for z in range(len(conversion_df)):
+    conversion_df.at[z, "followed ad"] = convert_text_to_binary(conversion_df.at[z, "followed ad"])
+    conversion_df.at[z, "made purchase"] = convert_text_to_binary(conversion_df.at[z, "made purchase"])
+    conversion_df.at[z, "user rating"] = convert_rating_to_grade(conversion_df.at[z, "user rating"])
+    # conversion_df.at[z, "color scheme"] = colour.Color(conversion_df.at[z, "color scheme"])
+
+# conversion_df["followed ad"].replace({"y": 1, "n": 0}, inplace=True)
+
+conversion_df.insert(conversion_df.columns.get_loc("color scheme"), "age", None)
 for z in range(len(conversion_df)):
     conversion_df.at[z, "age"] = (pd.Timestamp.now() - conversion_df.at[z, "birthday"]).days // 365
 
 conversion_df.drop(columns=["birthday"], inplace=True)
 
 conversion_df.insert(conversion_df.columns.get_loc("gender"), "age bucket", None)
-
 for z in range(len(conversion_df)):
     conversion_df.at[z, "age bucket"] = convert_age_to_range(conversion_df.at[z, "age"])
 
 conversion_df.drop(columns=["age"], inplace=True)
 
+print(conversion_df.dtypes)
+
 conversion_df = conversion_df.astype(
-    {"seen count": float, "followed ad": int, "made purchase": int, "user rating": int})
+    {"followed ad": "int64", "made purchase": "int64", "user rating": "int64"})
+
+print(conversion_df.dtypes)
 
 conversion_df.insert(conversion_df.columns.get_loc("user rating"), "ad effectiveness", None)
 
@@ -132,12 +140,9 @@ colors_groped = (conversion_df[["color scheme", "followed ad", "made purchase"]]
 
 followed_grouped = (conversion_df[["seen count", "followed ad"]]).groupby("followed ad").mean()
 
-# print(conversion_df.dtypes)
-
 # conversion_df["seen count"] = normalize_column(conversion_df["seen count"])
 
 seen_count_scaler = preprocessing.MinMaxScaler()
-
 conversion_df[["seen count"]] = seen_count_scaler.fit_transform(
     conversion_df[["seen count"]])
 
@@ -147,4 +152,4 @@ print(colors_groped)
 
 print(followed_grouped)
 
-conversion_df.to_csv("prepared_dataset_1.csv")
+conversion_df.to_csv("data/prepared_ad_conversion.csv")
