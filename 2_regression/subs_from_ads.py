@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sklearn.linear_model as lm
 
 
-subscribers_from_ads = pd.read_csv("subscribers_from_ads.csv")
+subscribers_from_ads = pd.read_csv("data/subscribers_from_ads.csv")
 print(subscribers_from_ads)
 
 plt.scatter(subscribers_from_ads[["promotion_budget"]], subscribers_from_ads[["subscribers"]])

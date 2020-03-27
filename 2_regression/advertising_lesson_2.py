@@ -3,10 +3,10 @@ import sklearn.linear_model as lm
 
 
 def model_to_string(model, labels, precision=4):
-    model_str = "{} = ".format(labels[0])
-    for z in range(1, len(labels)):
-        model_str += "{} * {} + ".format(round(model.coef_.flatten()[z - 1], 4), labels[z])
-    model_str += "{}".format(round(model.intercept_[0], 4))
+    model_str = "{} = ".format(labels[-1])
+    for z in range(len(labels) - 1):
+        model_str += "{} * {} + ".format(round(model.coef_.flatten()[z], precision), labels[z])
+    model_str += "{}".format(round(model.intercept_[0], precision))
     return model_str
 
 
@@ -24,7 +24,7 @@ linear_regression.fit(ad_data, sales_data)
 lasso_regression.fit(ad_data, sales_data)
 ridge_regression.fit(ad_data, sales_data)
 
-labels = ["sales", "TV", "radio", "newspaper"]
+labels = advertising_data.columns.values
 
 print("Linear regression.")
 print(model_to_string(linear_regression, labels))
