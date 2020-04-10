@@ -50,8 +50,8 @@ for z in range(0, 3):
                                                                                np.corrcoef(ad_data[feature_name],
                                                                                            sales_data["sales"])[0][1]))
 
-    X_train_2_features = X_train.drop(ad_data.columns[z], axis=1)
-    X_test_2_features = X_test.drop(ad_data.columns[z], axis=1)
+    X_train_2_features = X_train.drop(feature_name, axis=1)
+    X_test_2_features = X_test.drop(feature_name, axis=1)
     # print(X_train_2_features.head())
     labels_2_features = np.delete(labels, z)
 

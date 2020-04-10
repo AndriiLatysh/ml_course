@@ -62,15 +62,15 @@ joblib.dump(qualification_model, "models/qualification_by_two_grades_model.jobli
 # confusion_matrix = sm.confusion_matrix(y, predicted_qualification)
 # print(confusion_matrix)
 
-plt.clf()
-
-plt.xlabel("False positive rate")
-plt.ylabel("True positive rate")
-
-false_positive_rate, true_positive_rate, thresholds = sm.roc_curve(y, modeled_qualification_probabilities)
-plt.plot(false_positive_rate, true_positive_rate)
-
-roc_auc = sm.roc_auc_score(y, modeled_qualification_probabilities)
-print("Area under curve: {}".format(roc_auc))
+# plt.clf()
+#
+# plt.xlabel("False positive rate")
+# plt.ylabel("True positive rate")
+#
+# false_positive_rate, true_positive_rate, thresholds = sm.roc_curve(y, modeled_qualification_probabilities)
+# plt.plot(false_positive_rate, true_positive_rate)
+#
+# roc_auc = sm.roc_auc_score(y, modeled_qualification_probabilities)
+# print("Area under curve: {}".format(roc_auc))
 
 plt.show()

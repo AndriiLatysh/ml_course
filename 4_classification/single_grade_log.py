@@ -5,7 +5,7 @@ import sklearn.metrics as sm
 
 
 qualifies_single_grade_df = pd.read_csv("data/single_grade.csv")
-qualifies_single_grade_df.sort_values(by="grade", inplace=True)
+qualifies_single_grade_df.sort_values(by=["grade", "qualifies"], inplace=True)
 # print(qualifies_single_grade_df)
 
 qualified_candidates = qualifies_single_grade_df[qualifies_single_grade_df["qualifies"] == 1]
@@ -17,8 +17,8 @@ plt.scatter(unqualified_candidates["grade"], unqualified_candidates["qualifies"]
 X = qualifies_single_grade_df[["grade"]]
 y = qualifies_single_grade_df["qualifies"]
 
-# cv_qualification_model = lm.LogisticRegression()
-qualification_model = lm.LogisticRegression(solver="lbfgs")
+qualification_model = lm.LogisticRegression()
+# qualification_model = lm.LogisticRegression(penalty="none")
 qualification_model.fit(X, y)
 
 modeled_qualification = qualification_model.predict(X)
