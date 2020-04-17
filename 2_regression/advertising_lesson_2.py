@@ -30,10 +30,10 @@ print("Linear regression.")
 print(model_to_string(linear_regression, labels))
 print()
 
-print("Ridge regression.")
+print("L2.")
 print(model_to_string(ridge_regression, labels))
 print()
 
-print("Lasso regression.")
+print("L1.")
 print(model_to_string(lasso_regression, labels))
 print()
