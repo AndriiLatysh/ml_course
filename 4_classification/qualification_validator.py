@@ -18,6 +18,6 @@ while True:
     elif model_response == 1:
         text_response = "passes"
 
-    confidence_response = math.ceil(abs(200 * model_confidence - 100))
+    confidence_response = math.floor(abs(200 * model_confidence - 100))
 
     print("This candidate {} with the {}% confidence.".format(text_response, confidence_response))
