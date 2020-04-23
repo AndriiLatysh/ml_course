@@ -9,7 +9,7 @@ import sklearn.ensemble as sk_ensemble
 plt.figure(figsize=(18, 10))
 
 diabetes_df = pd.read_csv("data/pima-indians-diabetes.csv")
-column_names = diabetes_df.columns.tolist()
+column_names = diabetes_df.columns.values
 # print(column_names)
 
 X = diabetes_df[column_names[:-1]]
@@ -24,8 +24,8 @@ X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
 
 print("Decision tree:")
 
-# diabetes_tree_model = sk_trees.DecisionTreeClassifier(criterion="entropy", max_depth=3)
-diabetes_tree_model = sk_trees.DecisionTreeClassifier()
+diabetes_tree_model = sk_trees.DecisionTreeClassifier(criterion="gini", max_depth=3)
+# diabetes_tree_model = sk_trees.DecisionTreeClassifier()
 
 diabetes_tree_model.fit(X_train, y_train)
 
@@ -42,7 +42,7 @@ sk_trees.plot_tree(diabetes_tree_model, feature_names=column_names, class_names=
 
 print("Random forest:")
 
-diabetes_forest_model = sk_ensemble.RandomForestClassifier(n_jobs=-1, n_estimators=100)
+diabetes_forest_model = sk_ensemble.RandomForestClassifier(n_jobs=-1)
 
 diabetes_forest_model.fit(X_train, y_train)
 
