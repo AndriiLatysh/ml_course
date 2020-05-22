@@ -7,34 +7,34 @@ import sklearn.metrics as sk_metric
 import sklearn.preprocessing as sk_preprocessing
 
 
-def plot_model(model, input_scaler):
+def plot_model(model, qualifies_double_grade_df, input_scaler):
     plt.xlabel("Technical grade")
     plt.ylabel("English grade")
 
-    qualified_candidates = qualifies_double_grade[qualifies_double_grade["qualifies"] == 1]
-    unqualified_candidates = qualifies_double_grade[qualifies_double_grade["qualifies"] == 0]
+    qualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 1]
+    unqualified_candidates = qualifies_double_grade_df[qualifies_double_grade_df["qualifies"] == 0]
 
     max_grade = 101
-    english_grades_range = list(range(max_grade))
-    technical_grades_range = list(range(max_grade))
-    probability_level = np.empty([max_grade, max_grade])
+    prediction_points = []
 
-    for x in technical_grades_range:
-        for y in english_grades_range:
-            prediction_point = input_scaler.transform([[x, y]])
-            probability_level[x, y] = model.predict_proba(prediction_point)[:, 1]
+    for english_grade in range(max_grade):
+        for technical_grade in range(max_grade):
+            prediction_points.append([technical_grade, english_grade])
+    prediction_points = input_scaler.transform(prediction_points)
 
-    plt.contourf(probability_level, cmap="rainbow")
+    probability_levels = model.predict_proba(prediction_points)[:, 1]
+    probability_matrix = probability_levels.reshape(max_grade, max_grade)
+
+    plt.contourf(probability_matrix, cmap="rainbow")  # cmap="RdYlBu"/"binary"
 
     plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="w")
     plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="k")
 
-
-qualifies_double_grade = pd.read_csv("data/double_grade_reevaluated.csv")
+qualifies_double_grade_df = pd.read_csv("data/double_grade_reevaluated.csv")
 # print(qualifies_single_grade)
 
-X = qualifies_double_grade[["technical_grade", "english_grade"]]
-y = qualifies_double_grade[["qualifies"]]
+X = qualifies_double_grade_df[["technical_grade", "english_grade"]]
+y = qualifies_double_grade_df[["qualifies"]]
 
 min_max_scaler = sk_preprocessing.MinMaxScaler()
 X = min_max_scaler.fit_transform(X)
@@ -44,7 +44,7 @@ y = one_hot_encoding.fit_transform(y)
 
 X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
 
-qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(6, 6), max_iter=1000000)
+qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(10, ), max_iter=1000000)
 qualification_model.fit(X_train, y_train)
 
 y_predicted = qualification_model.predict(X_test)
@@ -55,6 +55,6 @@ transformed_y_predicted = one_hot_encoding.inverse_transform(y_predicted)
 confusion_matrix = sk_metric.confusion_matrix(transformed_y_test, transformed_y_predicted)
 print(confusion_matrix)
 
-plot_model(qualification_model, min_max_scaler)
+plot_model(qualification_model, qualifies_double_grade_df, min_max_scaler)
 
 plt.show()
