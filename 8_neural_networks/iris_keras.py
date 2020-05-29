@@ -10,7 +10,6 @@ import keras.models as keras_models
 import keras.layers as keras_layers
 
 
-# iris_dataset = pd.read_csv("data/iris.csv")
 iris_dataset = pd.read_csv("data/iris.csv").sample(frac=1)
 column_names = iris_dataset.columns.tolist()
 
@@ -24,7 +23,6 @@ one_hot_encoder = sk_preprocessing.LabelBinarizer()
 y = one_hot_encoder.fit_transform(y)
 
 for hidden_neurons in [1, 2, 4, 8, 16]:
-# for hidden_neurons in [8]:
 
     ANN_model = keras_models.Sequential()
 
@@ -39,7 +37,6 @@ for hidden_neurons in [1, 2, 4, 8, 16]:
     print(ANN_model.summary())
 
     training_history = ANN_model.fit(X, y, epochs=2000, batch_size=len(X), validation_split=0.25)
-    # training_history = ANN_model.fit(X, y, epochs=2000, batch_size=len(X))
 
     plt.plot(training_history.history["val_accuracy"], label=str(hidden_neurons))
 

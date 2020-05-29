@@ -24,6 +24,6 @@ while True:
 
     digit_prediction = digit_recognition_model.predict(digit_image_prepared)
     for z in range(len(digit_prediction[0])):
-        print("{} -> {:.02f}%".format(z, digit_prediction[0][z] * 100))
+        print("{} -> {:.2f}%".format(z, digit_prediction[0][z] * 100))
 
     plt.show()

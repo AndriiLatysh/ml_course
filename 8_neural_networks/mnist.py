@@ -7,18 +7,19 @@ import keras.datasets as keras_datasets
 import keras.utils as keras_utils
 import keras.models as keras_models
 import keras.layers as keras_layers
+import sklearn.metrics as sk_metrics
 
 
 np.set_printoptions(linewidth=200)
 
 (X_train, y_train), (X_test, y_test) = keras_datasets.mnist.load_data()
 
-# image_index = 3437
+image_index = 7777
 # print(y_train[image_index])
 # print(X_train[image_index])
 # plt.imshow(X_train[image_index], cmap="Greys")
 # plt.show()
-
+#
 # sys.exit()
 
 X_train_count = X_train.shape[0]
@@ -72,5 +73,11 @@ print("Training time: {} s".format(round(ending_time-stating_time)))
 CNN_model_evaluation = CNN_model.evaluate(x=X_test, y=y_test, verbose=0)
 
 print("Cross-validation accuracy: {}".format(CNN_model_evaluation[1]))
+
+y_predicted = CNN_model.predict(X_test)
+
+confusion_matrix = sk_metrics.confusion_matrix(y_test.argmax(axis=1), y_predicted.argmax(axis=1))
+print("Confusion matrix:")
+print(confusion_matrix)
 
 CNN_model.save("models/NMIST_CNN.h5")
