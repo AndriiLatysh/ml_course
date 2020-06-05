@@ -44,7 +44,7 @@ y = one_hot_encoding.fit_transform(y)
 
 X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
 
-qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(10, ), max_iter=1000000)
+qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(10, 10), activation="tanh", max_iter=100000)
 qualification_model.fit(X_train, y_train)
 
 y_predicted = qualification_model.predict(X_test)

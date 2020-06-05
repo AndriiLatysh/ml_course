@@ -18,14 +18,16 @@ def plot_model(model, title, scaler, qualifies_double_grade_df, subplot):
 
     max_grade = 101
     prediction_points = []
+
     for technical_grade in range(max_grade):
         for english_grade in range(max_grade):
-            prediction_points.append(scaler.transform([[technical_grade, english_grade]]))
-    prediction_points = np.array(prediction_points).reshape(-1, 2)
+            prediction_points.append([technical_grade, english_grade])
 
+    prediction_points = scaler.transform(prediction_points)
     probability_levels = model.predict_proba(prediction_points)[:, 1]
-    probability_levels = np.array(probability_levels).reshape(101, 101)
-    subplot.contourf(probability_levels, cmap="rainbow")  # cmap="RdYlBu"/"binary"
+    probability_matrix = probability_levels.reshape(max_grade, max_grade)
+
+    subplot.contourf(probability_matrix, cmap="rainbow")  # cmap="RdYlBu"/"binary"
 
     subplot.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="w")
     subplot.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="k")
@@ -50,11 +52,11 @@ ann_model = sk_nn.MLPClassifier(hidden_layer_sizes=(10, 10), activation="tanh", 
 ann_results = sk_ms.cross_val_score(ann_model, X, y, cv=k_folds)
 print("Neural Network accuracy: {:.2f} %".format(ann_results.mean() * 100))
 
-svm_model = sk_svm.SVC(kernel="rbf", gamma="scale", probability=True)
+svm_model = sk_svm.SVC(probability=True)
 svm_results = sk_ms.cross_val_score(svm_model, X, y, cv=k_folds)
 print("Support Vector Machine accuracy: {:.2f} %".format(svm_results.mean() * 100))
 
-rfc_model = sk_ensemble.RandomForestClassifier(n_jobs=-1, n_estimators=40)
+rfc_model = sk_ensemble.RandomForestClassifier(n_jobs=-1)
 forest_results = sk_ms.cross_val_score(rfc_model, X, y, cv=k_folds)
 print("Random Forest accuracy: {:.2f} %".format(forest_results.mean() * 100))
 
@@ -63,10 +65,11 @@ estimators.append(("ANN", ann_model))
 estimators.append(("SVC", svm_model))
 estimators.append(("RFC", rfc_model))
 
-ensemble_model = sk_ensemble.VotingClassifier(estimators, voting="soft")
+ensemble_model = sk_ensemble.StackingClassifier(estimators, cv=k_folds)
 ensemble_results = sk_ms.cross_val_score(ensemble_model, X, y, cv=k_folds)
+
 print()
-print("Voting Classifier accuracy: {:.2f} %". format(ensemble_results.mean() * 100))
+print("Stacking Classifier accuracy: {:.2f} %". format(ensemble_results.mean() * 100))
 print()
 
 ann_model.fit(X, y)
