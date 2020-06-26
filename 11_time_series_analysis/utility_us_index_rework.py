@@ -76,7 +76,7 @@ def plot_cv_prediction(predictions):
 register_matplotlib_converters()
 plt.figure(figsize=(20, 10))
 
-utility_index_df = pd.read_csv("data/IPG2211A2N.csv", parse_dates=["DATE"])
+utility_index_df = pd.read_csv("data/IPG2211A2N_2020.csv", parse_dates=["DATE"])
 utility_index_df.rename(columns={"DATE": "date", "IPG2211A2N": "value"}, inplace=True)
 utility_index_df.set_index("date", inplace=True)
 
