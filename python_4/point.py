@@ -16,7 +16,7 @@ class Point:
         self.y_coordinate += y_shift
 
     def __repr__(self):
-        point_str = "({}, {})".format(self.x_coordinate, self.y_coordinate)
+        point_str = f"({self.x_coordinate}, {self.y_coordinate})"
         return point_str
 
 

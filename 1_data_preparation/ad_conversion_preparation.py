@@ -109,7 +109,7 @@ for z in range(len(conversion_df)):
 
 conversion_df.insert(conversion_df.columns.get_loc("color scheme"), "age", None)
 for z in range(len(conversion_df)):
-    conversion_df.at[z, "age"] = (pd.Timestamp.now() - conversion_df.at[z, "birthday"]).days // 365
+    conversion_df.at[z, "age"] = (pd.Timestamp("01-01-2019") - conversion_df.at[z, "birthday"]).days // 365
 
 conversion_df.drop(columns=["birthday"], inplace=True)
 

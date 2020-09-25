@@ -8,9 +8,10 @@ print(subscribers_from_ads)
 
 plt.scatter(subscribers_from_ads[["promotion_budget"]], subscribers_from_ads[["subscribers"]])
 
-linear_regression = lm.LinearRegression()
 promotion_budget = subscribers_from_ads[["promotion_budget"]]
 number_of_subscribers = subscribers_from_ads[["subscribers"]]
+
+linear_regression = lm.LinearRegression()
 linear_regression.fit(X=promotion_budget, y=number_of_subscribers)
 
 print(linear_regression.coef_)

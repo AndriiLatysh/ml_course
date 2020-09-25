@@ -15,8 +15,8 @@ call_center_df = pd.read_csv("data/call_center.csv", parse_dates=["timestamp"])
 # call_center_df.at[18, "calls"] = 500
 # call_center_df.at[19, "calls"] = 500
 
-# X = np.array([t.value for t in call_center_df["timestamp"]]).reshape(-1, 1)
-X = np.array(call_center_df.index).reshape(-1, 1)
+X = np.array([t.value / 100000000000 for t in call_center_df["timestamp"]]).reshape(-1, 1)
+# X = np.array(call_center_df.index).reshape(-1, 1)
 y = np.array(call_center_df[["calls"]])
 
 plt.plot(X, y, color="b")
