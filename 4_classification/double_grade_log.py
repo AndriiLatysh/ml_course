@@ -34,7 +34,7 @@ y = qualifies_double_grade_df["qualifies"]
 
 number_of_folds = 4
 
-cv_qualification_model = lm.LogisticRegression(solver="lbfgs")
+cv_qualification_model = lm.LogisticRegression()
 cv_model_quality = ms.cross_val_score(cv_qualification_model, X, y, cv=number_of_folds, scoring="accuracy")
 print(cv_model_quality)
 
@@ -42,7 +42,7 @@ prediction_model_quality = ms.cross_val_predict(cv_qualification_model, X, y, cv
 cv_confusion_matrix = sm.confusion_matrix(y, prediction_model_quality)
 print(cv_confusion_matrix)
 
-qualification_model = lm.LogisticRegression(solver="lbfgs")
+qualification_model = lm.LogisticRegression()
 qualification_model.fit(X, y)
 
 modeled_qualification_probabilities = qualification_model.predict_proba(X)[:, 1]
@@ -60,7 +60,7 @@ predicted_qualification = qualification_model.predict(X)
 confusion_matrix = sm.confusion_matrix(y, predicted_qualification)
 print(confusion_matrix)
 
-plt.clf()
+# plt.clf()
 
 plt.xlabel("False positive rate")
 plt.ylabel("True positive rate")
