@@ -7,7 +7,8 @@ def convert_to_numeric_values(df):
     converted_df = df.copy()
     converted_df = converted_df.replace({"history": {"bad": 0, "fair": 1, "excellent": 2},
                                          "income": {"low": 0, "high": 1},
-                                         "term": {3: 0, 10: 1}})
+                                         "term": {3: 0, 10: 1},
+                                         "risk": {"low": 0, "high": 1}})
     return converted_df
 
 

@@ -36,10 +36,10 @@ sns.pairplot(qualifies_double_grade_df, hue="qualifies")
 X = qualifies_double_grade_df[["technical_grade", "english_grade"]]
 y = qualifies_double_grade_df["qualifies"]
 
-k_folds = sk_ms.StratifiedKFold(n_splits=4, shuffle=True)
+# k_folds = sk_ms.StratifiedKFold(n_splits=4, shuffle=True)
 
 naive_bayes_model = sk_naive_bayes.GaussianNB()
-cv_predictions = sk_ms.cross_val_predict(naive_bayes_model, X, y, cv=k_folds)
+cv_predictions = sk_ms.cross_val_predict(naive_bayes_model, X, y, cv=4)
 
 confusion_matrix = sk_metrics.confusion_matrix(y, cv_predictions)
 print(confusion_matrix)

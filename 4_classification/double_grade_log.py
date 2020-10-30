@@ -60,7 +60,7 @@ predicted_qualification = qualification_model.predict(X)
 confusion_matrix = sm.confusion_matrix(y, predicted_qualification)
 print(confusion_matrix)
 
-# plt.clf()
+plt.clf()
 
 plt.xlabel("False positive rate")
 plt.ylabel("True positive rate")
