@@ -5,14 +5,13 @@ import sklearn.tree as sk_trees
 
 def convert_to_numeric_values(df):
     converted_df = df.copy()
-    converted_df = converted_df.replace({"history": {"bad": 1, "fair": 2, "excellent": 3},
-                                         "income": {"low": 1, "high": 2}})
-    # if "risk" in df:
-    #     converted_df = converted_df.replace({"risk": {"low": 1, "high": 2}})
+    converted_df = converted_df.replace({"history": {"bad": 0, "fair": 1, "excellent": 2},
+                                         "income": {"low": 0, "high": 1},
+                                         "risk": {"low": 0, "high": 1}})
     return converted_df
 
 
-plt.figure(figsize=(16, 8))
+plt.figure(figsize=(12, 8))
 loan_df = pd.read_csv("data/loans.csv")
 print(loan_df)
 
@@ -28,6 +27,6 @@ loan_decision_tree = sk_trees.DecisionTreeClassifier()
 
 loan_decision_tree.fit(X, y)
 
-sk_trees.plot_tree(loan_decision_tree, feature_names=feature_names, class_names=["high", "low"], filled=True, rounded=True)
+sk_trees.plot_tree(loan_decision_tree, feature_names=feature_names, class_names=["low", "high"], filled=True, rounded=True)
 
 plt.show()

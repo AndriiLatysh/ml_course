@@ -24,7 +24,7 @@ X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
 
 print("Decision tree:")
 
-diabetes_tree_model = sk_trees.DecisionTreeClassifier(criterion="gini", max_depth=3)
+diabetes_tree_model = sk_trees.DecisionTreeClassifier(criterion="gini", max_depth=4)
 # diabetes_tree_model = sk_trees.DecisionTreeClassifier()
 
 diabetes_tree_model.fit(X_train, y_train)
