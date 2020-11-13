@@ -25,14 +25,12 @@ X = min_max_scaler.fit_transform(X)
 
 print(X)
 
-plt.title("Customer dendogram")
+plt.title("Customer dendrogram")
 
-linkage_method = "ward"
-dendogram = sp_clustering_hr.dendrogram(
-    sp_clustering_hr.linkage(X, method=linkage_method))  # single complete average ward
+linkage_method = "ward"     # single complete average ward
+dendrogram = sp_clustering_hr.dendrogram(sp_clustering_hr.linkage(X, method=linkage_method))
 
 agglomerative_model = sk_clustering.AgglomerativeClustering(n_clusters=4, linkage=linkage_method)
-
 agglomerative_model.fit(X)
 
 clients["class"] = agglomerative_model.labels_
