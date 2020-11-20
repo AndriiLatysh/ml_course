@@ -23,7 +23,7 @@ cv_iris_log_model = sk_linear.LogisticRegression()
 cv_iris_model_quality = sk_model_selection.cross_val_score(cv_iris_log_model, X, y, cv=4, scoring="accuracy")
 
 print("Model quality:")
-print(cv_iris_model_quality)
+# print(cv_iris_model_quality)
 print(np.mean(cv_iris_model_quality))
 
 # print(X)
@@ -56,7 +56,7 @@ cv_iris_2_model_quality = sk_model_selection.cross_val_score(cv_iris_2_log_model
                                                              iris_2_components_df["class"], cv=4, scoring="accuracy")
 
 print("2 pc model quality:")
-print(cv_iris_2_model_quality)
+# print(cv_iris_2_model_quality)
 print(np.mean(cv_iris_2_model_quality))
 
 plt.figure()
