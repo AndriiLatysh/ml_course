@@ -30,6 +30,7 @@ def plot_model(model, qualifies_double_grade_df, input_scaler):
     plt.scatter(qualified_candidates["technical_grade"], qualified_candidates["english_grade"], color="w")
     plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="k")
 
+
 qualifies_double_grade_df = pd.read_csv("data/double_grade_reevaluated.csv")
 # print(qualifies_single_grade)
 
@@ -44,7 +45,7 @@ y = one_hot_encoding.fit_transform(y)
 
 X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
 
-qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(10, 10), activation="tanh", max_iter=100000)
+qualification_model = sk_nn.MLPClassifier(hidden_layer_sizes=(6, 6), activation="tanh", max_iter=100000)
 qualification_model.fit(X_train, y_train)
 
 y_predicted = qualification_model.predict(X_test)
