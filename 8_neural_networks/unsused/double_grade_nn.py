@@ -31,7 +31,7 @@ def plot_model(model, qualifies_double_grade_df, input_scaler):
     plt.scatter(unqualified_candidates["technical_grade"], unqualified_candidates["english_grade"], color="k")
 
 
-qualifies_double_grade_df = pd.read_csv("data/double_grade_reevaluated.csv")
+qualifies_double_grade_df = pd.read_csv("../data/double_grade_reevaluated.csv")
 # print(qualifies_single_grade)
 
 X = qualifies_double_grade_df[["technical_grade", "english_grade"]]

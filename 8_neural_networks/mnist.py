@@ -14,7 +14,8 @@ np.set_printoptions(linewidth=200)
 
 (X_train, y_train), (X_test, y_test) = keras_datasets.mnist.load_data()
 
-image_index = 7777
+# image_index = 7777  # 42
+#
 # print(y_train[image_index])
 # print(X_train[image_index])
 # plt.imshow(X_train[image_index], cmap="Greys")

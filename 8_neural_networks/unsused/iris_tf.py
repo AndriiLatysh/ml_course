@@ -52,7 +52,7 @@ def create_train_model(input_nodes, hidden_nodes, output_nodes, X_train, y_train
     return weights1, weights2
 
 
-iris_dataset = pd.read_csv("data/iris.csv")
+iris_dataset = pd.read_csv("../data/iris.csv")
 
 X = np.array(iris_dataset[["sepal-length", "sepal-width", "petal-length", "petal-width"]]).reshape(-1, 4)
 y = np.array(iris_dataset["class"]).reshape(-1, 1)

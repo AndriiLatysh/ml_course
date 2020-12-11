@@ -15,7 +15,7 @@ def set_printing_options():
 
 set_printing_options()
 
-qualifies_by_double_grade = pd.read_csv("data/double_grade_reevaluated.csv")
+qualifies_by_double_grade = pd.read_csv("../data/double_grade_reevaluated.csv")
 
 qualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 1]
 unqualified_candidates = qualifies_by_double_grade[qualifies_by_double_grade["qualifies"] == 0]
