@@ -16,18 +16,21 @@ tfidf = sklearn_text.TfidfVectorizer(min_df=2, max_df=0.5, ngram_range=(1, 2))
 X = tfidf.fit_transform(X)
 print("Vectorisation finished.")
 
-X_train, X_test, y_train, y_test = sklearn_model_selection.train_test_split(X, y, test_size=0.25, shuffle=True, random_state=42)
+# print(X)
+# print(X.shape)
+
+X_train, X_test, y_train, y_test = sklearn_model_selection.train_test_split(X, y, test_size=0.2, shuffle=True)
 
 print("Logistic Regression training starting.")
 
-logistic_model = sklearn_linear.LogisticRegression(solver="lbfgs", max_iter=1000)
+logistic_model = sklearn_linear.LogisticRegression(max_iter=1000)
 logistic_model.fit(X_train, y_train)
 
 print("Logistic Regression training finished.")
 
 y_predicted = logistic_model.predict(X_test)
 
-print("Accuracy: {:.2f}%".format(sklearn_metrics.accuracy_score(y_test, y_predicted) * 100))
+print("Accuracy: {:.2f} %".format(sklearn_metrics.accuracy_score(y_test, y_predicted) * 100))
 print(sklearn_metrics.confusion_matrix(y_test, y_predicted))
 
 top_phrase_count = 20

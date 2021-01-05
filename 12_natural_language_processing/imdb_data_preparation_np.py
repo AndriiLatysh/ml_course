@@ -24,7 +24,6 @@ lemmatizer = nltk.stem.WordNetLemmatizer()
 # stemmer = nltk.stem.PorterStemmer()
 # stemmer = nltk.stem.LancasterStemmer()
 
-
 stop_words = nltk_corpus.stopwords.words("english")
 
 for x_row in range(len(X)):
@@ -41,10 +40,10 @@ for x_row in range(len(X)):
 
     X[x_row] = " ".join(X[x_row])
 
-    if x_row % 100 == 0:
-        print("{}/{} reviews prepared.".format(x_row, len(X)))
+    if (x_row + 1) % 100 == 0:
+        print("{}/{} reviews prepared.".format(x_row + 1, len(X)))
 else:
-    print("{}/{} reviews prepared.".format(len(X), len(X)))
+    print("Preparation finished.")
 
 print(X[3])
 
