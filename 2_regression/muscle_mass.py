@@ -15,6 +15,8 @@ plt.scatter(X, y)
 polynomial_transformer = pp.PolynomialFeatures(degree=2)
 X_transformed = polynomial_transformer.fit_transform(X)
 
+print(X_transformed)
+
 muscle_mass_model = lm.LinearRegression()
 muscle_mass_model.fit(X_transformed, y)
 
