@@ -1,5 +1,5 @@
 import pandas as pd
-import sklearn.linear_model as lm
+import sklearn.linear_model as sk_linear
 
 
 def model_to_string(model, labels, precision=4):
@@ -16,15 +16,15 @@ print(advertising_data)
 ad_data = advertising_data[["TV", "radio", "newspaper"]]
 sales_data = advertising_data[["sales"]]
 
-linear_regression = lm.LinearRegression()
-lasso_regression = lm.Lasso()
-ridge_regression = lm.Ridge()
+labels = advertising_data.columns.values
+
+linear_regression = sk_linear.LinearRegression()
+lasso_regression = sk_linear.Lasso()
+ridge_regression = sk_linear.Ridge()
 
 linear_regression.fit(ad_data, sales_data)
 lasso_regression.fit(ad_data, sales_data)
 ridge_regression.fit(ad_data, sales_data)
-
-labels = advertising_data.columns.values
 
 print("Linear regression.")
 print(model_to_string(linear_regression, labels))
