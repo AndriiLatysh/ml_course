@@ -50,15 +50,15 @@ y_boundary = [-(k1 * x + b) / k2 for x in x_boundary]
 
 plt.plot(x_boundary, y_boundary, color="b")
 
-# plt.clf()
-#
-# plt.xlabel("False positive rate")
-# plt.ylabel("True positive rate")
-#
-# false_positive_rate, true_positive_rate, thresholds = sk_metrics.roc_curve(y, modeled_qualification_probability)
-# plt.plot(false_positive_rate, true_positive_rate)
-#
-# roc_auc = sk_metrics.roc_auc_score(y, modeled_qualification_probability)
-# print(f"Area under curve: {roc_auc}")
+plt.clf()
+
+plt.xlabel("False positive rate")
+plt.ylabel("True positive rate")
+
+false_positive_rate, true_positive_rate, thresholds = sk_metrics.roc_curve(y, modeled_qualification_probability)
+plt.plot(false_positive_rate, true_positive_rate)
+
+roc_auc = sk_metrics.roc_auc_score(y, modeled_qualification_probability)
+print(f"Area under curve: {roc_auc}")
 
 plt.show()
