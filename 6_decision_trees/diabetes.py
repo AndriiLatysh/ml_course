@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn.tree as sk_trees
-import sklearn.model_selection as sk_ms
+import sklearn.model_selection as sk_model_selection
 import sklearn.metrics as sk_metrics
 import sklearn.ensemble as sk_ensemble
 
@@ -20,7 +20,7 @@ y = diabetes_df[column_names[-1]]
 #
 # print(len(diabetes_df))
 
-X_train, X_test, y_train, y_test = sk_ms.train_test_split(X, y)
+X_train, X_test, y_train, y_test = sk_model_selection.train_test_split(X, y)
 
 print("Decision tree:")
 
