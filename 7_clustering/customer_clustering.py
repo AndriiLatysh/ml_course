@@ -17,9 +17,9 @@ clients = pd.read_csv("data/customer_online_closing_store.csv")
 clients["return_rate"] = clients["items_returned"] / clients["items_purchased"]
 clients["average_price"] = clients["total_spent"] / clients["items_purchased"]
 
-print(clients[["average_price", "return_rate", "overall_rating"]])
+X = clients[["average_price", "return_rate", "overall_rating"]]
+print(X)
 
-X = np.array(clients[["average_price", "return_rate", "overall_rating"]]).reshape(-1, 3)
 min_max_scaler = sk_preprocessing.MinMaxScaler()
 X = min_max_scaler.fit_transform(X)
 
