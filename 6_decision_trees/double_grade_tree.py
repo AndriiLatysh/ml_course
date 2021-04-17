@@ -7,8 +7,8 @@ import double_grade_utility
 
 
 # qualifies_double_grade_df = pd.read_csv("data/double_grade_small.csv")
-# qualifies_double_grade_df = pd.read_csv("data/double_grade.csv")
-qualifies_double_grade_df = pd.read_csv("data/double_grade_reevaluated.csv")
+qualifies_double_grade_df = pd.read_csv("data/double_grade.csv")
+# qualifies_double_grade_df = pd.read_csv("data/double_grade_reevaluated.csv")
 
 X = qualifies_double_grade_df[["technical_grade", "english_grade"]]
 y = qualifies_double_grade_df["qualifies"]

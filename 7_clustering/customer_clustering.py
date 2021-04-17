@@ -27,7 +27,7 @@ print(X)
 
 plt.title("Customer dendrogram")
 
-linkage_method = "ward"     # single complete average ward
+linkage_method = "ward"  # single complete average ward
 dendrogram = sp_clustering_hr.dendrogram(sp_clustering_hr.linkage(X, method=linkage_method))
 
 agglomerative_model = sk_clustering.AgglomerativeClustering(n_clusters=4, linkage=linkage_method)
@@ -37,10 +37,10 @@ clients["class"] = agglomerative_model.labels_
 
 print(clients[["average_price", "return_rate", "overall_rating", "class"]])
 
-user_pivot_table = clients.pivot_table(index="class",
-                                       values=["average_price", "return_rate", "overall_rating", "customer_id"],
-                                       aggfunc={"average_price": np.mean, "return_rate": np.mean,
-                                                "overall_rating": np.mean, "customer_id": len})
-print(user_pivot_table)
+client_pivot_table = clients.pivot_table(index="class",
+                                         values=["average_price", "return_rate", "overall_rating", "customer_id"],
+                                         aggfunc={"average_price": np.mean, "return_rate": np.mean,
+                                                  "overall_rating": np.mean, "customer_id": len})
+print(client_pivot_table)
 
 plt.show()
