@@ -8,7 +8,7 @@ import sklearn.model_selection as sk_model_selection
 import statsmodels.tsa.seasonal as statsmodels_seasonal
 import statsmodels.tsa.statespace.sarimax as statmodels_sarimax
 import statsmodels.graphics.tsaplots as statmodels_tsaplots
-import TSErrors
+# import TSErrors
 
 
 def make_cv_splits(data_df, n_splits):
@@ -57,35 +57,30 @@ def make_cv_predictions(cv_splits, model, **kwargs):
     return pd.concat(predictions)
 
 
-# def get_cv_errors(cv_splits, predictions):
-#     errors = {"MAE": [], "MSE": [], "RMSLE": []}    # TODO test different errors
-#     for z in range(len(predictions)):
-#         test_df = cv_splits[z][1]
-#         predicted_df = predictions[z]
-#         errors["MAE"].append(sk_metrics.mean_absolute_error(test_df["value"], predicted_df["value"]))
-#         errors["MSE"].append(sk_metrics.mean_squared_error(test_df["value"], predicted_df["value"]))
-#         errors["RMSLE"].append(math.sqrt(sk_metrics.mean_squared_log_error(test_df["value"], predicted_df["value"])))
-#     for error_type, error_list in errors.items():
-#         errors[error_type] = np.mean(error_list)
-#     return errors
+def calculate_errors(true_df, predicted_df):
+    errors = {}
+    errors["MAE"] = sk_metrics.mean_absolute_error(true_df["value"], predicted_df["value"])
+    errors["MSE"] = sk_metrics.mean_squared_error(true_df["value"], predicted_df["value"])
+    errors["RMSLE"] = math.sqrt(sk_metrics.mean_squared_log_error(true_df["value"], predicted_df["value"]))
+    return errors
 
 
-def calculate_errors(true_df, predicted_df, metrics=("mae", "rmse", "mape")):
-    ts_errors = TSErrors.FindErrors(true_df, predicted_df)
-    all_errors = ts_errors.calculate_all()
-    error_list = {key: all_errors[key] for key in metrics}
-    return error_list
+# def calculate_errors(true_df, predicted_df, metrics=("mae", "rmse", "mape")):
+#     ts_errors = TSErrors.FindErrors(true_df, predicted_df)
+#     all_errors = ts_errors.calculate_all()
+#     error_list = {key: all_errors[key] for key in metrics}
+#     return error_list
 
 
 register_matplotlib_converters()
 
-utility_index_df = pd.read_csv("data/IPG2211A2N_2020.csv", parse_dates=["DATE"])
+utility_index_df = pd.read_csv("data/IPG2211A2N_2021.csv", parse_dates=["DATE"])
 utility_index_df.rename(columns={"DATE": "date", "IPG2211A2N": "value"}, inplace=True)
 utility_index_df.set_index("date", inplace=True)
 utility_index_df.index.freq = utility_index_df.index.inferred_freq
 
 utility_index_df = utility_index_df[
-    (utility_index_df.index >= pd.Timestamp("1980-01-01")) & (utility_index_df.index < pd.Timestamp("2020-12-01"))]
+    (utility_index_df.index >= pd.Timestamp("1981-01-01")) & (utility_index_df.index < pd.Timestamp("2021-12-01"))]
 
 print(len(utility_index_df))
 print(utility_index_df.index.min())
